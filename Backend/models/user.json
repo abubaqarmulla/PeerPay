@@ -1,0 +1,27 @@
+[
+    {
+      "sender_id": "67599d0c09f4287aa202b66a",
+      "receiver_id": "675c508d68548620b7be101f",
+      "transaction_id": "6759cfeed186c8692f27c7b5",
+      "message": "Transaction 8382c8d4cd0a625dd30c15456ee33a91 has defaulted due to insufficient funds.",
+      "read": false,
+      "created_at": "2024-12-11T17:52:10.679Z"
+    },
+    {
+      "sender_id": "67599d0c09f4287aa202b66b",
+      "receiver_id": "675c508d68548620b7be101f",
+      "transaction_id": "6759cfeed186c8692f27c7b6",
+      "message": "Transaction 1234a8d9d0a4355e67891f5c83fbd1b6 has been successfully processed.",
+      "read": false,
+      "created_at": "2024-12-11T17:52:10.679Z"
+    },
+    {
+      "sender_id": "67599d0c09f4287aa202b66c",
+      "receiver_id": "675c508d68548620b7be101f",
+      "transaction_id": "6759cfeed186c8692f27c7b7",
+      "message": "Transaction 8752c8b7b1c0659b9e34f32be8f442cb is under review.",
+      "read": false,
+      "created_at": "2024-12-11T17:52:10.679Z"
+    }
+  ]
+  

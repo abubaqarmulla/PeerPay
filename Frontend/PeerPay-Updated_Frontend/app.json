@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "PeerPay",
+    "slug": "PeerPay",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./App/assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./App/assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./App/assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+    "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./App/assets/favicon.png"
+    }
+  }
+}
