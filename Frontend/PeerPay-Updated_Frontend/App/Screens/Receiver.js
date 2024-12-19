@@ -7,10 +7,13 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  Image
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'; // Import SafeAreaView
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from "../../urlconfig";
+import { useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../../context';
 
 const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove, onReject }) => {
@@ -29,7 +32,7 @@ const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove,
       <View style={styles.cardContent}>
         <Text style={styles.transactionText}>Sender: {transaction.senderName}</Text>
         <Text style={styles.transactionText}>Receiver: {transaction.receiverName}</Text>
-        <Text style={styles.transactionText}>Amount: {transaction.amount.$numberDecimal}</Text> 
+        <Text style={styles.transactionText}>Amount: {transaction.amount.$numberDecimal}</Text>
         <Text style={styles.transactionText}>Due Date: {new Date(transaction.due_date).toLocaleDateString()}</Text>
         <Text style={styles.transactionText}>Description: {transaction.description}</Text>
       </View>
@@ -49,7 +52,7 @@ const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove,
 
 const Receiver = () => {
   const { changeT, updatechangeT } = useAppContext();
-
+  const navigation = useNavigation();
   const [transactions, setTransactions] = useState([]);
   const [filter, setFilter] = useState('ALL');
   const [loading, setLoading] = useState(false);
@@ -126,7 +129,7 @@ const Receiver = () => {
       if (response.ok) {
         Alert.alert('Success', result.message);
         fetchTransactions();
-        updatechangeT()
+        updatechangeT();
       } else {
         Alert.alert('Error', result.error);
       }
@@ -147,7 +150,7 @@ const Receiver = () => {
       if (response.ok) {
         Alert.alert('Success', result.message);
         fetchTransactions();
-        updatechangeT()
+        updatechangeT();
       } else {
         Alert.alert('Error', result.error);
       }
@@ -157,7 +160,13 @@ const Receiver = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}> {/* Wrap everything in SafeAreaView */}
+       {/* Header */}
+                      <View style={styles.header}>
+                          <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
+                              <Image source={require('../assets/Back.png')} style={styles.backImage} />
+                          </TouchableOpacity>
+                      </View>
       <Text style={styles.header}>Transaction List as Loan Receiver</Text>
       <Picker
         selectedValue={filter}
@@ -192,70 +201,81 @@ const Receiver = () => {
           contentContainerStyle={styles.transactionList}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f5f7fa',
   },
   header: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: '#333',
+    color: '#2c3e50',
     textAlign: 'center',
+    marginTop:30,
   },
   picker: {
     marginBottom: 16,
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  transactionCard: {
-    padding: 16,
-    backgroundColor: '#fff',
-    marginBottom: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#ccd1d9',
+    elevation: 2,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 3,
+  },
+  backImage: {
+        width: 30,
+        height: 30,
+        resizeMode: 'contain',
+        marginRight: 10,
+    },
+  transactionCard: {
+    padding: 16,
+    backgroundColor: '#ffffff',
+    marginBottom: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#e1e8ed',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   selectedCard: {
-    borderColor: '#4CAF50',
+    borderColor: '#00796b',
     borderWidth: 2,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   transactionId: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#34495e',
   },
   transactionState: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#4CAF50',
+    fontWeight: '600',
+    color: '#27ae60',
   },
   cardContent: {
     paddingVertical: 8,
   },
   transactionText: {
     fontSize: 14,
-    color: '#555',
-    marginVertical: 2,
+    color: '#7f8c8d',
+    marginVertical: 4,
+    lineHeight: 20,
   },
   loader: {
     marginTop: 20,
@@ -263,27 +283,36 @@ const styles = StyleSheet.create({
   transactionList: {
     paddingBottom: 20,
   },
-
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 10,
+    justifyContent: 'space-evenly',
+    marginTop: 12,
   },
   approveButton: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 4,
+    backgroundColor: '#27ae60',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
   },
   rejectButton: {
-    backgroundColor: '#F44336',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 4,
+    backgroundColor: '#e74c3c',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontWeight: '600',
+    fontSize: 14,
+    textTransform: 'uppercase',
   },
 });
 

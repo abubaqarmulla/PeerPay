@@ -1,18 +1,24 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
-
+import { View, Image, Text, StyleSheet, TextInput,TouchableOpacity ,ImageBackground} from 'react-native';
+import { SafeAreaView } from "react-native-safe-area-context";
 function WelcomeScreen({navigation}) {
 
     
     return (
         
+        <SafeAreaView style={styles.safeArea}>
+              <ImageBackground 
+                source={require("../assets/06-01.jpg")}  // Add your image path here
+                style={styles.background}
+              >
+
         <View style={styles.container}>
             <Image style={styles.logo} source={require("../assets/Logo.png")} />
             <Text style={styles.title}>Empowering Your Financial Future Through Peer-to-Peer Lending</Text>
 
             <TouchableOpacity
                 style={styles.loginButton}
-                onPress={() => navigation.navigate('Menu')}
+                onPress={() => navigation.navigate('Login')}
             >
                 <Text style={styles.loginButtonText}>Login</Text>
             </TouchableOpacity>
@@ -23,17 +29,23 @@ function WelcomeScreen({navigation}) {
             >
                 <Text style={styles.registerButtonText}>SignUp</Text>
             </TouchableOpacity>
-        </View>
+                </View>
+                </ImageBackground>
+                    </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f7f7f7", // Light background color for a clean look
-        padding: 20,
+        borderColor: "#288885", // Vibrant red border color
+        borderWidth: 1,
+        backgroundColor: "rgba(255, 255, 255, 0.6)", // Semi-transparent white background
+        borderRadius: 10,
+        width: "90%",
+        height: "70%",
+    
     },
     logo: {
         width: 250,
@@ -75,6 +87,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#fff", // White text color for contrast
     },
+    safeArea: {
+    flex: 1,
+    },
+    background: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });
 
 export default WelcomeScreen;

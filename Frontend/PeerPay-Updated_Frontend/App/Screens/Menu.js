@@ -5,9 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 function HomeScreen({ navigation }) {
     const images = [
-        { id: '1', source: require('../assets/image1.jpeg') },
-        { id: '2', source: require('../assets/image2.jpeg') },
-        { id: '3', source: require('../assets/image3.jpeg') },
+        { id: '1', source: require('../assets/1.png') },
+        { id: '2', source: require('../assets/2.png') },
+        { id: '3', source: require('../assets/3.png') },
     ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -52,7 +52,7 @@ function HomeScreen({ navigation }) {
                     <Icon name="money" size={30} color="#288885" />
         <Text style={styles.gridText}>
             Account Balance:{"\n"}
-            <Text style={styles.balanceText}>₹20,000</Text>
+            <Text style={styles.balanceText}>₹2,000</Text>
         </Text>
         <Text style={styles.gridDescription}>
             Check your current balance and track your transactions effortlessly.
@@ -84,9 +84,7 @@ function HomeScreen({ navigation }) {
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Profile')}>
                     <Icon name="user" size={23} color="#288885" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('AadharVerify')}>
-                    <Icon name="folder" size={23} color="#288885" />
-                </TouchableOpacity>
+                
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Notifications')}>
                     <Icon name="bell" size={23} color="#288885" />
                 </TouchableOpacity>
@@ -95,6 +93,9 @@ function HomeScreen({ navigation }) {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Support')}>
                     <Icon name="headphones" size={23} color="#288885" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Welcome')}>
+                    <Icon name="sign-out" size={23} color="#288885" />
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

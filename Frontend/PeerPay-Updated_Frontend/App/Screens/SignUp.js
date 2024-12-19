@@ -198,6 +198,8 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     width: "90%",
+    borderColor: "#288885", // Vibrant red border color
+        borderWidth: 1,
   },
   title: {
     fontSize: 24,

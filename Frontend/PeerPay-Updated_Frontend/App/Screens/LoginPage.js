@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, StyleSheet,ImageBackground } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../urlconfig";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Replace this with your backend API URL
 const API_URL = `http://${BASE_URL}/auth/login`;
@@ -11,6 +12,7 @@ const LoginPage = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [user, setUser] = useState("");
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -27,6 +29,28 @@ const LoginPage = ({ navigation }) => {
     };
 
     getUserId(); // Call the function on component mount
+
+
+    const getUserDetails = async () => {
+            try {
+                const userId = await AsyncStorage.getItem('userId');
+                if (userId) {
+                    const response = await fetch(`http://${BASE_URL}/user/${userId}`);
+                    const data = await response.json();
+                    if (response.ok) {
+                        setUser(data);
+                    } else {
+                        console.error('Failed to fetch user data');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getUserDetails();
   }, []);
 
   // Handle the login process using fetch API
@@ -69,17 +93,24 @@ const LoginPage = ({ navigation }) => {
 };
 
   return (
+     <SafeAreaView style={styles.safeArea}>
+                  <ImageBackground 
+                    source={require("../assets/06-01.jpg")}  // Add your image path here
+                    style={styles.background}
+                  >
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
       {error ? <Text style={styles.errorMessage}>{error}</Text> : null}
       {message ? <Text style={styles.successMessage}>{message}</Text> : null}
 
+      
+      <Text style={styles.title}>{user.name ? `Welcome, ${user.name}` : loading ? "Loading..." : "Login"}</Text>
       <TextInput
         style={styles.input}
         placeholder="User ID"
         value={userId || ""}
         onChangeText={(text) => setUserId(text)}
-      />
+        />
       <TextInput
         style={styles.input}
         placeholder="Password"
@@ -95,58 +126,65 @@ const LoginPage = ({ navigation }) => {
           <Text style={styles.buttonText}>Login</Text>
         )}
       </TouchableOpacity>
-    </View>
+        </View>
+          </ImageBackground>
+                            </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
-    padding: 24,
-    backgroundColor: "#f7f7f7", // Light background color
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.6)", // Semi-transparent white
+    borderRadius: 10,
+    padding: 20, // Added padding to give space to child elements
+    width: "90%",
+    maxWidth: 400, // Optional: set a max width for large screens
+    borderWidth: 1,
+    borderColor:"#288885",
   },
   title: {
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 24,
-    color: "#1B3139", // Dark text color for title
+    color: "#1B3139",
   },
   input: {
+    width: "100%", // Ensure inputs stretch fully within the container
     height: 50,
-    borderColor: "#FF6347", // Vibrant red border color
+    borderColor: "#288885",
     borderWidth: 1,
     borderRadius: 25,
     marginBottom: 16,
-    paddingLeft: 16,
+    paddingHorizontal: 16,
     fontSize: 16,
-    backgroundColor: "#fff", // White background for inputs
-  },
-  successMessage: {
-    color: "green",
-    textAlign: "center",
-    marginBottom: 12,
-    fontSize: 16,
-  },
-  errorMessage: {
-    color: "red",
-    textAlign: "center",
-    marginBottom: 12,
-    fontSize: 16,
+    backgroundColor: "#fff",
   },
   button: {
-    backgroundColor: "#FF6347", // Vibrant button color
+    width: "100%", // Make the button stretch within the container
+    backgroundColor: "#288885",
     paddingVertical: 14,
     borderRadius: 25,
-    marginTop: 12,
     alignItems: "center",
+    marginTop: 12,
   },
   buttonText: {
-    color: "#fff", // White text color
+    color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
   },
+  safeArea: {
+    flex: 1,
+  },
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 16, // Add padding for safe area
+  },
 });
+
 
 export default LoginPage;

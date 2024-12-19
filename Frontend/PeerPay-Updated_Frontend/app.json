@@ -20,14 +20,20 @@
         "foregroundImage": "./App/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-    "permissions": [
+      "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
-      ]
+      ],
+      "package": "com.abubaqar16.PeerPay"
     },
     "web": {
       "favicon": "./App/assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b562e13e-d605-49c1-a990-c91fa583ff10"
+      }
     }
   }
 }

@@ -106,6 +106,36 @@ app.get("/users/:id/distance", getUsersByDistance);
 app.get('/notifications/:receiverId',getallNotifications);
 
 
+// Example route for fetching username
+app.get('/user/get-username', async (req, res) => {
+  const { userId } = req.query;
+
+  // Check if the userId is a valid MongoDB ObjectId
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: 'Invalid User ID format' });
+  }
+
+  try {
+    // Convert string userId to ObjectId
+    const objectIdUserId = mongoose.Types.ObjectId(userId);
+
+    // Query the database with the converted ObjectId
+    const user = await User.findById(objectIdUserId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Return the username
+    res.json({ username: user.name });
+  } catch (err) {
+    console.error("Error fetching user:", err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+});
+
+
+
 
 // Global Error Handling for Multer
 app.use((err, req, res, next) => {

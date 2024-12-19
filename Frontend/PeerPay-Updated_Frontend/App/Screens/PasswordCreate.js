@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, ActivityIndicator, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Button, ActivityIndicator, StyleSheet, TouchableOpacity,ImageBackground } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "../../urlconfig";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // API URL for the backend
 const API_URL = `http://${BASE_URL}/auth/set-password`;
@@ -67,6 +68,13 @@ const SetPasswordForm = () => {
   }, []);
 
   return (
+
+      <SafeAreaView style={styles.safeArea}>
+                        <ImageBackground 
+                          source={require("../assets/06-01.jpg")}  // Add your image path here
+                          style={styles.background}
+                        >
+
     <View style={styles.container}>
       <Text style={styles.title}>Set Your Password</Text>
 
@@ -99,16 +107,23 @@ const SetPasswordForm = () => {
           <Text style={styles.buttonText}>Set Password</Text>
         </TouchableOpacity>
       )}
-    </View>
+        </View>
+        </ImageBackground>
+                                    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 24,
-    backgroundColor: "#f7f7f7", // Light background color
+   justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.6)", // Semi-transparent white
+    borderRadius: 10,
+    padding: 20, // Added padding to give space to child elements
+    width: "90%",
+    maxWidth: 400, // Optional: set a max width for large screens
+    borderWidth: 1,
+    borderColor:"#288885",
   },
   title: {
     fontSize: 28,
@@ -118,14 +133,15 @@ const styles = StyleSheet.create({
     color: "#1B3139", // Dark text color for title
   },
   input: {
+    width: "100%", // Ensure inputs stretch fully within the container
     height: 50,
-    borderColor: "#FF6347", // Vibrant border color
+    borderColor: "#288885",
     borderWidth: 1,
     borderRadius: 25,
     marginBottom: 16,
-    paddingLeft: 16,
+    paddingHorizontal: 16,
     fontSize: 16,
-    backgroundColor: "#fff", // White background for inputs
+    backgroundColor: "#fff",
   },
   successMessage: {
     color: "green",
@@ -140,16 +156,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   button: {
-    backgroundColor: "#FF6347", // Vibrant button color
+    width: "100%", // Make the button stretch within the container
+    backgroundColor: "#288885",
     paddingVertical: 14,
     borderRadius: 25,
-    marginTop: 12,
     alignItems: "center",
+    marginTop: 12,
   },
   buttonText: {
     color: "#fff", // White text color
     fontSize: 18,
     fontWeight: "bold",
+  },
+   safeArea: {
+    flex: 1,
+  },
+  background: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 16, // Add padding for safe area
   },
 });
 

@@ -53,6 +53,11 @@ const getUserById = async (req, res) => {
   try {
     const userId = req.params.id;  // Getting user id from the route parameter
 
+    // Validate that the userId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid User ID format" });
+    }
+
     // Fetch the user from the database
     const user = await User.findById(userId);
 
