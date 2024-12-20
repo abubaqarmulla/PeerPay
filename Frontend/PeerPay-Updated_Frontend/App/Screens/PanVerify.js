@@ -73,7 +73,7 @@ const PanVerify = () => {
       type:type,
     });
     try {
-      const response = await fetch(`http://${BASE_URL}/auth/verify-pan`, {
+      const response = await fetch(`https://${BASE_URL}/auth/verify-pan`, {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",

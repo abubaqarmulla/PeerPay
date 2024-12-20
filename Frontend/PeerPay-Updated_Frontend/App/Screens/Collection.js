@@ -21,7 +21,7 @@ function Collection() {
 
         setLoading(true);
         try {
-            const url = `http://${BASE_URL}/alltransactions/receiver/${receiverId}`;
+            const url = `https://${BASE_URL}/alltransactions/receiver/${receiverId}`;
             const response = await fetch(url);
 
             if (!response.ok) {

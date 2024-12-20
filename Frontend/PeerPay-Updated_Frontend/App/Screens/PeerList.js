@@ -38,7 +38,7 @@ const PeerList = () => {
 
   const fetchAllUsers = async () => {
     try {
-      const response = await axios.get(`http://${BASE_URL}/users`);
+      const response = await axios.get(`https://${BASE_URL}/users`);
       const formattedUsers = response.data.map((user) => ({
         ...user,
         interest_rate: user.interest_rate?.$numberDecimal || user.interest_rate,
@@ -52,7 +52,7 @@ const PeerList = () => {
   const fetchUsersByAmount = async () => {
     try {
       const response = await axios.get(
-        `http://${BASE_URL}/users/amount?amount=${amount}`
+        `https://${BASE_URL}/users/amount?amount=${amount}`
       );
       const formattedUsers = response.data.map((user) => ({
         ...user,
@@ -68,7 +68,7 @@ const PeerList = () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
       const response = await axios.get(
-        `http://${BASE_URL}/users/${userId}/distance?distance=${distance}`
+        `https://${BASE_URL}/users/${userId}/distance?distance=${distance}`
       );
       const formattedUsers = response.data.map((user) => ({
         ...user,
@@ -109,7 +109,7 @@ const PeerList = () => {
         description,
       };
 
-      await axios.post(`http://${BASE_URL}/transaction/create`, payload);
+      await axios.post(`https://${BASE_URL}/transaction/create`, payload);
 
       Alert.alert('Success', 'Transaction request created successfully');
       closeRequestModal();

@@ -16,7 +16,7 @@ const Notifications = ({ navigation }) => {
       try {
         const receiverId = await AsyncStorage.getItem("userId");
         if (receiverId) {
-          const response = await axios.get(`http://${BASE_URL}/notifications/${receiverId}`);
+          const response = await axios.get(`https://${BASE_URL}/notifications/${receiverId}`);
           setNotifications(response.data);
         }
       } catch (error) {

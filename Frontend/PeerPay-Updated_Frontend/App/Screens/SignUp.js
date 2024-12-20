@@ -30,7 +30,7 @@ const SignUp = ({ navigation }) => {
     };
 
     try {
-      const response = await fetch(`http://${BASE_URL}/auth/register`, {
+      const response = await fetch(`https://${BASE_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // API URL for the backend
-const API_URL = `http://${BASE_URL}/auth/set-password`;
+const API_URL = `https://${BASE_URL}/auth/set-password`;
 
 const SetPasswordForm = () => {
 

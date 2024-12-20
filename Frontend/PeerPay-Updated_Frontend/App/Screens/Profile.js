@@ -17,7 +17,7 @@ function Profile() {
             try {
                 const userId = await AsyncStorage.getItem('userId');
                 if (userId) {
-                    const response = await fetch(`http://${BASE_URL}/user/${userId}`);
+                    const response = await fetch(`https://${BASE_URL}/user/${userId}`);
                     const data = await response.json();
                     if (response.ok) {
                         setUser(data);

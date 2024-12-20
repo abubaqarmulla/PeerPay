@@ -23,6 +23,9 @@
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
       ],
       "package": "com.abubaqar16.PeerPay"
@@ -34,6 +37,12 @@
       "eas": {
         "projectId": "b562e13e-d605-49c1-a990-c91fa583ff10"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/b562e13e-d605-49c1-a990-c91fa583ff10"
     }
   }
 }

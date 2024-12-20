@@ -62,7 +62,7 @@ const Send = () => {
 
   const fetchUserById = async (userId) => {
     try {
-      const response = await fetch(`http://${BASE_URL}/user/${userId}`);
+      const response = await fetch(`https://${BASE_URL}/user/${userId}`);
       const data = await response.json();
       return data.name;
     } catch (error) {
@@ -75,9 +75,9 @@ const Send = () => {
     const senderId = await AsyncStorage.getItem('userId');
     setLoading(true);
     try {
-      let url = `http://${BASE_URL}/alltransactions/sender/${senderId}`;
+      let url = `https://${BASE_URL}/alltransactions/sender/${senderId}`;
       if (filter !== 'ALL') {
-        url = `http://${BASE_URL}/transaction/${filter.toLowerCase()}/sender/${senderId}`;
+        url = `https://${BASE_URL}/transaction/${filter.toLowerCase()}/sender/${senderId}`;
       }
 
       const response = await fetch(url);
@@ -108,7 +108,7 @@ const Send = () => {
 
   const handleApprove = async (transactionId) => {
     try {
-      const response = await fetch(`http://${BASE_URL}/transaction/approve-sender`, {
+      const response = await fetch(`https://${BASE_URL}/transaction/approve-sender`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transaction_id: transactionId }),
@@ -129,7 +129,7 @@ const Send = () => {
 
   const handleReject = async (transactionId) => {
     try {
-      const response = await fetch(`http://${BASE_URL}/transaction/rejected-sender`, {
+      const response = await fetch(`https://${BASE_URL}/transaction/rejected-sender`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transaction_id: transactionId }),
@@ -156,7 +156,7 @@ const Send = () => {
     }
 
     try {
-      const response = await fetch(`http://${BASE_URL}/api/transaction/overdue`, {
+      const response = await fetch(`https://${BASE_URL}/api/transaction/overdue`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ senderId }),

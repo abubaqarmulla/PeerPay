@@ -5,7 +5,7 @@ import { BASE_URL } from "../../urlconfig";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // Replace this with your backend API URL
-const API_URL = `http://${BASE_URL}/auth/login`;
+const API_URL = `https://${BASE_URL}/auth/login`;
 
 const LoginPage = ({ navigation }) => {
   const [userId, setUserId] = useState(null); // Initially set to null, as we'll get it from AsyncStorage
@@ -35,7 +35,7 @@ const LoginPage = ({ navigation }) => {
             try {
                 const userId = await AsyncStorage.getItem('userId');
                 if (userId) {
-                    const response = await fetch(`http://${BASE_URL}/user/${userId}`);
+                    const response = await fetch(`https://${BASE_URL}/user/${userId}`);
                     const data = await response.json();
                     if (response.ok) {
                         setUser(data);

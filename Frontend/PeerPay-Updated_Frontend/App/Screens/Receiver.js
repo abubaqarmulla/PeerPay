@@ -67,7 +67,7 @@ const Receiver = () => {
 
   const fetchUserById = async (userId) => {
     try {
-      const response = await fetch(`http://${BASE_URL}/user/${userId}`);
+      const response = await fetch(`https://${BASE_URL}/user/${userId}`);
       const data = await response.json();
       return data.name;
     } catch (error) {
@@ -85,9 +85,9 @@ const Receiver = () => {
 
     setLoading(true);
     try {
-      let url = `http://${BASE_URL}/alltransactions/receiver/${receiverId}`;
+      let url = `https://${BASE_URL}/alltransactions/receiver/${receiverId}`;
       if (filter !== 'ALL') {
-        url = `http://${BASE_URL}/transaction/${filter.toLowerCase()}/receiver/${receiverId}`;
+        url = `https://${BASE_URL}/transaction/${filter.toLowerCase()}/receiver/${receiverId}`;
       }
 
       const response = await fetch(url);
@@ -122,7 +122,7 @@ const Receiver = () => {
 
   const handleApprove = async (transactionId) => {
     try {
-      const response = await fetch(`http://${BASE_URL}/transaction/approve-receiver`, {
+      const response = await fetch(`https://${BASE_URL}/transaction/approve-receiver`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transaction_id: transactionId }),
@@ -143,7 +143,7 @@ const Receiver = () => {
 
   const handleReject = async (transactionId) => {
     try {
-      const response = await fetch(`http://${BASE_URL}/transaction/rejected-receiver`, {
+      const response = await fetch(`https://${BASE_URL}/transaction/rejected-receiver`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transaction_id: transactionId }),

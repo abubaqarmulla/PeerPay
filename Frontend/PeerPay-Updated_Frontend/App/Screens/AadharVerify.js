@@ -72,7 +72,7 @@ const AadhaarVerify = () => {
       type:type,
     });
     try {
-      const response = await fetch(`http://${BASE_URL}/auth/verify-aadhaar`, {
+      const response = await fetch(`https://${BASE_URL}/auth/verify-aadhaar`, {
         method: "POST",
         headers: {
           "Content-Type": "multipart/form-data",
