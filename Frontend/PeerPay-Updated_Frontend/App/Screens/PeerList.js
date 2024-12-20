@@ -143,8 +143,10 @@ const PeerList = () => {
         <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
           <Image source={require('../assets/Back.png')} style={styles.backImage} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>User Directory</Text>
+        
       </View>
+
+      <Text style={styles.title}>Peer List</Text>
 
       <View style={styles.filterContainer}>
         <View style={styles.filterInputGroup}>
@@ -246,9 +248,17 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#f8f9fa',
+        justifyContent: 'space-between',
+        padding: 10,
+        backgroundColor: '#ffffff',
+        elevation: 3,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#288885',
+    textAlign: 'center',
+    marginVertical: 10,
   },
   headerTitle: {
     fontSize: 20,

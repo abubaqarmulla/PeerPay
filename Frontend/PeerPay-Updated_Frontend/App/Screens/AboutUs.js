@@ -18,9 +18,9 @@ function AboutUs() {
                     <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
                         <Image source={require('../assets/Back.png')} style={styles.backImage} />
                     </TouchableOpacity>
-                    <Text style={styles.headerTitle}>About Us</Text>
+                    
                 </View>
-
+                <Text style={styles.title}>AboutUs</Text>
                 {/* About Us Section */}
                 <View style={styles.aboutCard}>
                     <Text style={styles.aboutHeading}>Who We Are</Text>
@@ -76,10 +76,19 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        alignItems: 'center',
+        justifyContent: 'space-between',
         padding: 10,
-        backgroundColor: 'white',
+        backgroundColor: '#ffffff',
+        elevation: 3,
     },
+    title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#288885',
+    textAlign: 'center',
+        marginVertical: 10,
+    
+  },
     backImage: {
         width: 30,
         height: 30,
@@ -114,33 +123,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         lineHeight: 22,
     },
-    bottomNav: {
-        position: 'absolute',
-        bottom: 10,
-        left: '7%',
-        right: '7%',
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: 'white',
-        padding: 5,
-        borderRadius: 200,
-        elevation: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-    },
-    bottomButton: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 10,
-    },
-    bottomButtonText: {
-        color: 'grey',
-        fontSize: 15,
-        fontWeight: '500',
-    },
+    
+    
+   
 });
 
 export default AboutUs;

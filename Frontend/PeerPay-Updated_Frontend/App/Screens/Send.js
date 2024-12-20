@@ -7,7 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  ScrollView,Image
+  ScrollView, Image
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,22 +18,18 @@ import { useNavigation } from '@react-navigation/native';
 
 const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove, onReject }) => {
   return (
-    
     <TouchableOpacity
-      style={[
-        styles.transactionCard,
-        selectedTransaction?._id === transaction._id && styles.selectedCard,
-      ]}
+      style={[styles.transactionCard, selectedTransaction?._id === transaction._id && styles.selectedCard]}
       onPress={onPress}
     >
       <View style={styles.cardHeader}>
         <Text style={styles.transactionId}>Transaction ID: {transaction.transaction_id}</Text>
-        <Text style={styles.transactionState}>{transaction.transaction_state}</Text>
       </View>
       <View style={styles.cardContent}>
+        <Text style={styles.transactionState}>{transaction.transaction_state}</Text>
         <Text style={styles.transactionText}>Sender: {transaction.senderName}</Text>
         <Text style={styles.transactionText}>Receiver: {transaction.receiverName}</Text>
-      <Text style={styles.transactionText}>Amount: {transaction.amount.$numberDecimal}</Text>
+        <Text style={styles.transactionText}>Amount: ₹{transaction.amount.$numberDecimal}</Text>
         <Text style={styles.transactionText}>Due Date: {new Date(transaction.due_date).toLocaleDateString()}</Text>
         <Text style={styles.transactionText}>Description: {transaction.description}</Text>
       </View>
@@ -47,14 +43,13 @@ const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove,
           </TouchableOpacity>
         </View>
       )}
-        </TouchableOpacity>
-       
+    </TouchableOpacity>
   );
 };
 
 const Send = () => {
   const [transactions, setTransactions] = useState([]);
-  const [filter, setFilter] = useState('ALL'); // Default filter
+  const [filter, setFilter] = useState('ALL');
   const [loading, setLoading] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const navigation = useNavigation();
@@ -63,7 +58,6 @@ const Send = () => {
 
   useEffect(() => {
     fetchTransactions();
-    
   }, [filter, changeT]);
 
   const fetchUserById = async (userId) => {
@@ -88,10 +82,9 @@ const Send = () => {
 
       const response = await fetch(url);
 
-      // Check for 404 status and handle empty transactions
       if (response.status === 404) {
         Alert.alert('No transactions available');
-        setTransactions([]); // Set transactions to an empty array if no data is found
+        setTransactions([]);
         return;
       }
 
@@ -117,9 +110,7 @@ const Send = () => {
     try {
       const response = await fetch(`http://${BASE_URL}/transaction/approve-sender`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transaction_id: transactionId }),
       });
 
@@ -140,9 +131,7 @@ const Send = () => {
     try {
       const response = await fetch(`http://${BASE_URL}/transaction/rejected-sender`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transaction_id: transactionId }),
       });
 
@@ -158,66 +147,54 @@ const Send = () => {
       Alert.alert('Error', error.message);
     }
   };
+
   const processOverdueTransactions = async () => {
     const senderId = await AsyncStorage.getItem('userId');
-    
     if (!senderId) {
-        Alert.alert('Error', 'Sender ID not found');
-        return;
+      Alert.alert('Error', 'Sender ID not found');
+      return;
     }
 
     try {
-        const response = await fetch(`http://${BASE_URL}/api/transaction/overdue`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ senderId }),
-        });
+      const response = await fetch(`http://${BASE_URL}/api/transaction/overdue`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ senderId }),
+      });
 
-        // Log the raw response text before parsing
-        const responseText = await response.text();
-        console.log('Raw Response:', responseText);
+      const responseText = await response.text();
+      let data;
 
-        let data;
-        try {
-            data = JSON.parse(responseText);
-        } catch (parseError) {
-            console.error('JSON Parse Error:', parseError);
-            Alert.alert('Error', 'Invalid server response');
-            return;
-        }
+      try {
+        data = JSON.parse(responseText);
+      } catch (parseError) {
+        Alert.alert('Error', 'Invalid server response');
+        return;
+      }
 
-        if (response.ok) {
-            Alert.alert('Success', data.message);
-            fetchTransactions();
-            updatechangeT(); // Refresh the transaction list
-        } else if (response.status === 505) {
-            Alert.alert('Defaulted Transactions', data.message);
-        } else {
-            Alert.alert('No overdue transactions found', data.message);
-        }
+      if (response.ok) {
+        Alert.alert('Success', data.message);
+        fetchTransactions();
+        updatechangeT();
+      } else {
+        Alert.alert('Error', data.message);
+      }
     } catch (error) {
-        console.error('Fetch Error:', error);
-        Alert.alert('Error', error.message);
+      Alert.alert('Error', error.message);
     }
-};
-  
+  };
 
-  
   return (
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
+          <Image source={require('../assets/Back.png')} style={styles.backImage} />
+        </TouchableOpacity>
+        
+      </View>
 
-      <SafeAreaView style={styles.container}>
-            
-                {/* Header */}
-                <View style={styles.header}>
-                    <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
-                        <Image source={require('../assets/Back.png')} style={styles.backImage} />
-                    </TouchableOpacity>
-                </View>
-
-    
-      <Text style={styles.header2}>Transaction List as Loan Provider</Text>
+      <Text style={styles.title}>Send Money</Text>
       <Picker
         selectedValue={filter}
         onValueChange={(value) => setFilter(value)}
@@ -232,13 +209,10 @@ const Send = () => {
         <Picker.Item label="Defaulted" value="DEFAULTED" />
         <Picker.Item label="Returned" value="RETURNED" />
       </Picker>
-      <TouchableOpacity
-      style={styles.overdueButton}
-      onPress={processOverdueTransactions}
-      >
+
+      <TouchableOpacity style={styles.overdueButton} onPress={processOverdueTransactions}>
         <Text style={styles.buttonText}>Process Overdue Transactions</Text>
       </TouchableOpacity>
-
 
       {loading ? (
         <ActivityIndicator size="large" color="#4CAF50" style={styles.loader} />
@@ -254,26 +228,21 @@ const Send = () => {
               onApprove={() => handleApprove(item.transaction_id)}
               onReject={() => handleReject(item.transaction_id)}
             />
-
           )}
           contentContainerStyle={styles.transactionList}
         />
       )}
-        
-        
-                </SafeAreaView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-        flex: 1,
-        backgroundColor: '#eafbfa',
-    },
- 
- 
+    flex: 1,
+    backgroundColor: '#eafbfa',
+  },
   picker: {
-   marginBottom: 16,
+    marginBottom: 16,
     backgroundColor: '#fff',
     borderRadius: 12,
     borderWidth: 1,
@@ -282,19 +251,26 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 3,
+    paddingVertical: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#288885',
+    textAlign: 'center',
+    marginVertical: 10,
   },
   transactionCard: {
-   padding: 16,
-    backgroundColor: '#ffffff',
-    marginBottom: 12,
+    padding: 16,
+    backgroundColor: '#fff',
+    marginBottom: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#e1e8ed',
+    borderColor: '#ddd',
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
     elevation: 3,
-    padding: 16,
   },
   selectedCard: {
     borderColor: '#4CAF50',
@@ -329,7 +305,7 @@ const styles = StyleSheet.create({
   },
   transactionList: {
     paddingBottom: 20,
-    padding:10
+    paddingHorizontal: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -338,14 +314,14 @@ const styles = StyleSheet.create({
   },
   approveButton: {
     backgroundColor: '#4CAF50',
-    padding: 10,
+    padding: 12,
     borderRadius: 8,
     flex: 0.48,
     alignItems: 'center',
   },
   rejectButton: {
     backgroundColor: '#f44336',
-    padding: 10,
+    padding: 12,
     borderRadius: 8,
     flex: 0.48,
     alignItems: 'center',
@@ -355,41 +331,51 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  overdueButton: {
-    backgroundColor: '#FF9800',
-    padding: 12,
-    borderRadius: 8,
+   overdueButton: {
+    backgroundColor: '#FF9800', // A more vibrant color
+    paddingVertical: 15, // Increased height for a better button size
+    borderRadius: 10, // Softer rounded corners for a modern look
     alignItems: 'center',
-    marginVertical: 10,
+    marginVertical: 20, // More spacing above and below the button
+    elevation: 4, // Added shadow for a more elevated look
+    shadowColor: '#000', // Shadow for better depth
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    width: '90%', // 90% of the screen width
+    alignSelf: 'center', // Centers the button horizontally
   },
-  buttonText: {
-    color: '#fff',
+  overdueButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: '#fff', // White text for contrast
+    letterSpacing: 1, // Spacing out the letters for better readability
+  
   },
-   header: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
+  header: {
+    flexDirection: 'row',
+        justifyContent: 'space-between',
         padding: 10,
-     alignItems: 'center',
-        backgroundColor:'white',
-       
+        backgroundColor: '#ffffff',
+        elevation: 3,
   },
-   header2: {
-        flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-     marginBottom: 12,
-     backgroundColor:"white",
-       
-    },
   backImage: {
     width: 30,
     height: 30,
     resizeMode: 'contain',
     marginRight: 10,
+  },
+  pageTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginLeft: 10,
+  },
+  cardHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginVertical: 10,
   }
-  
 });
 
 export default Send;

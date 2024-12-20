@@ -62,24 +62,8 @@ const Notifications = ({ navigation }) => {
         )}
       </View>
 
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Profile')}>
-          <Icon name="user" size={23} color="#288885" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('AadharVerify')}>
-          <Icon name="folder" size={23} color="#288885" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Notifications')}>
-          <Icon name="bell" size={23} color="#288885" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('PasswordCreate')}>
-          <Icon name="cog" size={23} color="#288885" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Support')}>
-          <Icon name="headphones" size={23} color="#288885" />
-        </TouchableOpacity>
-      </View>
+      
+      
     </SafeAreaView>
   );
 };

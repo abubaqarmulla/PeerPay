@@ -93,10 +93,10 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         padding: 10,
-        alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#ffffff',
+        elevation: 3,
     },
     backImage: {
         width: 30,
@@ -161,33 +161,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: '600',
     },
-    bottomNav: {
-        position: 'absolute',
-        bottom: 10,  // Adjust the bottom position as needed
-        left: '7%',  // Add horizontal margin to reduce width
-        right: '7%',  // Add horizontal margin to reduce width
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        backgroundColor: 'white',
-        padding: 5,
-        borderRadius: 200,  // Rounded shape
-        elevation: 5, // For shadow on Android
-        shadowColor: '#000', // For shadow on iOS
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 5,
-    },
-    bottomButton: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 10,
-    },
-    bottomButtonText: {
-        color: 'grey',
-        fontSize: 15,
-        fontWeight: '500',
-    },
+   
 });
 
 export default Support;

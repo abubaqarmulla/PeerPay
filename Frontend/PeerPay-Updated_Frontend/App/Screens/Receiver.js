@@ -28,10 +28,8 @@ const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove,
     >
       <View style={styles.cardHeader}>
         <Text style={styles.transactionId}>Transaction ID: {transaction._id}</Text>
-        
       </View>
-       <View style={styles.cardHeader}>
-        
+      <View style={styles.cardHeader}>
         <Text style={styles.transactionState}>{transaction.transaction_state}</Text>
       </View>
       <View style={styles.cardContent}>
@@ -220,14 +218,15 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    padding: 10,
-    alignItems: 'center',
-    backgroundColor: 'white',
+        justifyContent: 'space-between',
+        padding: 10,
+        backgroundColor: '#ffffff',
+        elevation: 3,
   },
   title: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
+    color: '#288885',
     textAlign: 'center',
     marginVertical: 10,
   },
@@ -259,9 +258,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
-    padding: 16,
-    
-    
   },
   selectedCard: {
     borderColor: '#00796b',
@@ -276,60 +272,52 @@ const styles = StyleSheet.create({
   transactionId: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#34495e',
+    color: '#2c3e50',
   },
   transactionState: {
     fontSize: 14,
-    fontWeight: '600',
-    color: '#27ae60',
+    fontWeight: 'bold',
+    color: '#4CAF50',
   },
   cardContent: {
-    paddingVertical: 8,
+    marginBottom: 12,
   },
   transactionText: {
     fontSize: 14,
-    color: '#7f8c8d',
-    marginVertical: 4,
-    lineHeight: 20,
-    
-  },
-  loader: {
-    marginTop: 20,
-  },
-  transactionList: {
-    paddingBottom: 20,
-    padding:10
+    color: '#2c3e50',
+    marginBottom: 4,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginTop: 12,
+    justifyContent: 'space-between',
   },
   approveButton: {
-    backgroundColor: '#27ae60',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    backgroundColor: '#4CAF50',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#388e3c',
   },
   rejectButton: {
-    backgroundColor: '#e74c3c',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    backgroundColor: '#f44336',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#d32f2f',
   },
   buttonText: {
     color: '#fff',
-    fontWeight: '600',
-    fontSize: 14,
-    textTransform: 'uppercase',
+    fontSize: 16,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  transactionList: {
+    paddingHorizontal: 16,
   },
 });
 

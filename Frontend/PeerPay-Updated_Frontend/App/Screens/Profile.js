@@ -68,7 +68,7 @@ function Profile() {
                 </View>
                 <View style={styles.detailsCard}>
                 <Text style={styles.detailsText}>
-                 Account Balance {user.Amount.$numberDecimal}
+                 Account Balance: {user.Amount.$numberDecimal} INR
                 </Text>
                 </View>
                 <View style={styles.detailsCard}>
@@ -103,10 +103,10 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         padding: 10,
-        alignItems: 'center',
-       
+        backgroundColor: '#ffffff',
+        elevation: 3,
     },
     backImage: {
         width: 30,

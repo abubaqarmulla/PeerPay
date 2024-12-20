@@ -111,10 +111,10 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         padding: 10,
-        alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#ffffff',
+        elevation: 3,
     },
     backImage: {
         width: 30,
