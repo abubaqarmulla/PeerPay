@@ -87,6 +87,7 @@ const SetPasswordForm = () => {
         value={password}
         onChangeText={setPassword}
         maxLength={8} // Limit to 8 digits
+        minLength={8}
         placeholderTextColor="#888"
         keyboardType="numeric"
       />
@@ -97,7 +98,9 @@ const SetPasswordForm = () => {
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         maxLength={8} // Limit to 8 digits
+        minLength={8}
         placeholderTextColor="#888"
+        keyboardType="numeric"
       />
 
       {loading ? (

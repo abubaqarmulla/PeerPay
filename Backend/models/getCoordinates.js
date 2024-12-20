@@ -1,5 +1,5 @@
 const axios = require('axios');
-
+require('dotenv').config({ path: '../.env' });
 // Use the OpenCage API key directly or via environment variable
 const OPENCAGE_API_KEY = process.env.OPENCAGE_API_KEY || '2c6e54fbe99f457da1b69c17337db3f6';  // Fallback to hardcoded key if not in environment variable
 

@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from "../../urlconfig";
 import { useNavigation } from '@react-navigation/native';
 import { useAppContext } from '../../context';
+import { RefreshControl } from 'react-native';
 
 const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove, onReject }) => {
   return (
@@ -27,6 +28,10 @@ const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove,
     >
       <View style={styles.cardHeader}>
         <Text style={styles.transactionId}>Transaction ID: {transaction._id}</Text>
+        
+      </View>
+       <View style={styles.cardHeader}>
+        
         <Text style={styles.transactionState}>{transaction.transaction_state}</Text>
       </View>
       <View style={styles.cardContent}>
@@ -160,14 +165,14 @@ const Receiver = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}> {/* Wrap everything in SafeAreaView */}
-       {/* Header */}
-                      <View style={styles.header}>
-                          <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
-                              <Image source={require('../assets/Back.png')} style={styles.backImage} />
-                          </TouchableOpacity>
-                      </View>
-      <Text style={styles.header}>Transaction List as Loan Receiver</Text>
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
+          <Image source={require('../assets/Back.png')} style={styles.backImage} />
+        </TouchableOpacity>
+      </View>
+      <Text style={styles.title}>Request Users</Text>
       <Picker
         selectedValue={filter}
         onValueChange={(value) => setFilter(value)}
@@ -198,6 +203,9 @@ const Receiver = () => {
               onReject={() => handleReject(item.transaction_id)}
             />
           )}
+          refreshControl={
+            <RefreshControl refreshing={loading} onRefresh={fetchTransactions} />
+          }
           contentContainerStyle={styles.transactionList}
         />
       )}
@@ -208,16 +216,20 @@ const Receiver = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#f5f7fa',
+    backgroundColor: '#eafbfa',
   },
   header: {
-    fontSize: 26,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    padding: 10,
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  title: {
+    fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#2c3e50',
     textAlign: 'center',
-    marginTop:30,
+    marginVertical: 10,
   },
   picker: {
     marginBottom: 16,
@@ -231,11 +243,11 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
   },
   backImage: {
-        width: 30,
-        height: 30,
-        resizeMode: 'contain',
-        marginRight: 10,
-    },
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: 10,
+  },
   transactionCard: {
     padding: 16,
     backgroundColor: '#ffffff',
@@ -247,6 +259,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 3,
+    padding: 16,
+    
+    
   },
   selectedCard: {
     borderColor: '#00796b',
@@ -276,12 +291,14 @@ const styles = StyleSheet.create({
     color: '#7f8c8d',
     marginVertical: 4,
     lineHeight: 20,
+    
   },
   loader: {
     marginTop: 20,
   },
   transactionList: {
     paddingBottom: 20,
+    padding:10
   },
   buttonContainer: {
     flexDirection: 'row',

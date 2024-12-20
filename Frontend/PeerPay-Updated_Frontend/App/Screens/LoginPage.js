@@ -104,7 +104,7 @@ const LoginPage = ({ navigation }) => {
       {message ? <Text style={styles.successMessage}>{message}</Text> : null}
 
       
-      <Text style={styles.title}>{user.name ? `Welcome, ${user.name}` : loading ? "Loading..." : "Login"}</Text>
+          <Text style={styles.bodyText} >{user.name ? `Welcome, ${user.name}` : loading ? "Loading..." : "Enter Details"}</Text>
       <TextInput
         style={styles.input}
         placeholder="User ID"
@@ -117,6 +117,9 @@ const LoginPage = ({ navigation }) => {
         secureTextEntry
         value={password}
         onChangeText={(text) => setPassword(text)}
+        keyboardType="numeric"
+        minLength={8}
+        maxLength={8}
       />
       
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
@@ -174,6 +177,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+  },
+  bodyText: {
+    fontSize: 16,
+    color: '#666',
+    lineHeight: 24,
+    marginBottom: 12,
   },
   safeArea: {
     flex: 1,

@@ -129,7 +129,7 @@ const PeerList = () => {
         <Text style={styles.cardDetails}>Interest Rate: {item.interest_rate}%</Text>
       </Card.Content>
       <View style={styles.cardActions}>
-        <Button mode="contained" onPress={() => openRequestModal(item)}>
+        <Button  mode="contained" onPress={() => openRequestModal(item)}>
           Request
         </Button>
       </View>

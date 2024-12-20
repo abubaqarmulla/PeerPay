@@ -11,7 +11,7 @@ import Send from './Send';
 import Notifications from './Notifications'; 
 import Support from './Support'; 
 import AboutUs from './AboutUs'; 
-
+import Collection from './Collection';
 import PanVerify from './PanVerify'; 
 import PasswordCreate from './PasswordCreate';
 import Receiver from './Receiver'; // Path to your Receiver screen
@@ -39,7 +39,8 @@ function AppNavigator() {
       <Stack.Screen name="AadharVerify" component={AadhaarVerify} options={{ headerShown: false }} />
       <Stack.Screen name="PanVerify" component={PanVerify} options={{ headerShown: false }} />
       <Stack.Screen name="PasswordCreate" component={PasswordCreate} options={{ headerShown: false }} />
-     
+      <Stack.Screen name="Collection" component={Collection} options={{ headerShown: false }} />
+
     </Stack.Navigator>
   );
 }

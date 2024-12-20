@@ -25,14 +25,14 @@ function AboutUs() {
                 <View style={styles.aboutCard}>
                     <Text style={styles.aboutHeading}>Who We Are</Text>
                     <Text style={styles.aboutText}>
-                        We are a passionate team dedicated to revolutionizing the NFT space. Our mission is to provide a platform that empowers artists, collectors, and enthusiasts to explore the vast potential of digital assets.
+                        We are a passionate team dedicated to transforming the peer-to-peer money-lending space. Our mission is to provide a secure platform that empowers borrowers and lenders to connect and transact with ease.
                     </Text>
                 </View>
 
                 <View style={styles.aboutCard}>
                     <Text style={styles.aboutHeading}>Our Vision</Text>
                     <Text style={styles.aboutText}>
-                        To bridge the gap between creativity and technology by making NFTs accessible and user-friendly for everyone.
+                       To bridge the gap between borrowers and lenders by creating a secure and user-friendly platform for seamless money-lending transactions.
                     </Text>
                 </View>
                 <View style={styles.aboutCard}>
@@ -43,23 +43,23 @@ function AboutUs() {
                         </Text>
                     <Text style={styles.aboutText}>
                     <Text>Brahnaraj Kashatti: </Text>
-                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.linkedin.com/in/developer2')}>LinkedIn</Text>
+                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.linkedin.com/in/brahmaraj-kashetti-829739304/')}>LinkedIn</Text>
                         </Text>
                     <Text style={styles.aboutText}>
                     <Text>Abhishek Terani: </Text>
-                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.linkedin.com/in/developer3')}>LinkedIn</Text>
+                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.linkedin.com/in/abhishek-terani-a6215b283')}>LinkedIn</Text>
                         </Text>
                     <Text style={styles.aboutText}>
                     <Text>Aman Mulla: </Text>
-                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.linkedin.com/in/developer3')}>LinkedIn</Text>
+                    <Text style={{ color: 'blue' }} onPress={() => Linking.openURL('https://www.linkedin.com/in/aman-mulla-15a777244')}>LinkedIn</Text>
                         </Text>
                 </View>
 
                 <View style={styles.aboutCard}>
                     <Text style={styles.aboutHeading}>Contact Us</Text>
-                    <Text style={styles.aboutText}>Email: support@nftplatform.com</Text>
-                    <Text style={styles.aboutText}>Phone: +91 9876543210</Text>
-                    <Text style={styles.aboutText}>Address: 456 Innovation Drive, Tech City, Country</Text>
+                    <Text style={styles.aboutText}>Email: amanmulla799@gmail.com</Text> 
+                    <Text style={styles.aboutText}>Phone: +91 866 003 0446</Text>
+                    <Text style={styles.aboutText}>Address: KLS Gogte Institute Of Technology, Udhyambag, Belagavi</Text>
                 </View>
             </ScrollView>
 

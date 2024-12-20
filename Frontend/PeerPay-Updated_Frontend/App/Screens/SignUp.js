@@ -134,15 +134,17 @@ const SignUp = ({ navigation }) => {
             value={panCard}
             onChangeText={handlePanChange}
             maxLength={10}
+            minLength={10}
           />
 
           <TextInput
             style={styles.input}
-            placeholder="AadharCard Number in 4 4 4 form"
+            placeholder="AadharCard Number (xxxx xxxx xxxx)"
             value={aadharCard}
             onChangeText={handleAadharChange}
             keyboardType="numeric"
             maxLength={14}
+            minLength={14}
           />
 
           <TextInput
@@ -173,6 +175,7 @@ const SignUp = ({ navigation }) => {
             onChangeText={handlePinCodeChange}
             keyboardType="numeric"
             maxLength={6}
+            minLength={6}
           />
 
           <TouchableOpacity style={styles.button} onPress={handleSignUp}>

@@ -1,12 +1,36 @@
 // App/Screens/Support.js
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, TextInput, Linking, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 function Support() {
     const navigation = useNavigation(); // Access navigation
+    const [feedback, setFeedback] = useState(''); // State for feedback input
+
+    const handleFeedbackSubmit = () => {
+        if (feedback.trim() === '') {
+            Alert.alert('Error', 'Please enter your feedback before submitting.');
+            return;
+        }
+
+        const email = 'amanmulla799@gmail.com';
+        const subject = 'Feedback from App';
+        const body = encodeURIComponent(feedback);
+        const mailtoURL = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${body}`;
+
+        Linking.openURL(mailtoURL)
+            .then(() => {
+                Alert.alert('Success', 'Your feedback has been sent successfully.');
+                setFeedback(''); // Clear the input field
+                navigation.goBack(); // Redirect to the previous screen
+            })
+            .catch((error) => {
+                console.error('Error opening mail app:', error);
+                Alert.alert('Error', 'Failed to open mail app. Please try again.');
+            });
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -27,7 +51,7 @@ function Support() {
                 <View style={styles.detailsCard}>
                     <Text style={styles.detailsTitle}>Frequently Asked Questions</Text>
                     <Text style={styles.detailsText}>1. How can I reset my password?</Text>
-                    <Text style={styles.detailsTextAnswer}>Go to the login page and click "Forgot Password" to reset your password.</Text>
+                    <Text style={styles.detailsTextAnswer}>Go to the settings page and enter new password to reset your password.</Text>
                     <Text style={styles.detailsText}>2. How do I contact customer support?</Text>
                     <Text style={styles.detailsTextAnswer}>You can reach us via the contact details provided below.</Text>
                 </View>
@@ -35,9 +59,9 @@ function Support() {
                 {/* Contact Details Section */}
                 <View style={styles.detailsCard}>
                     <Text style={styles.detailsTitle}>Contact Us</Text>
-                    <Text style={styles.detailsText}>Phone Number: +91 9876543210</Text>
-                    <Text style={styles.detailsText}>Email: support@yourapp.com</Text>
-                    <Text style={styles.detailsText}>Address: 123 Main Street, City, Country</Text>
+                    <Text style={styles.detailsText}>Phone Number: +91 866 003 0446</Text>
+                    <Text style={styles.detailsText}>Email: amanmulla799@gmail.com</Text>
+                    <Text style={styles.detailsText}>Address: KLS Gogte Institute Of Technology, Udhyambag, Belagavi</Text>
                 </View>
 
                 {/* Feedback Section */}
@@ -48,8 +72,10 @@ function Support() {
                         placeholder="Write your feedback here..."
                         placeholderTextColor="#888"
                         multiline
+                        value={feedback}
+                        onChangeText={setFeedback}
                     />
-                    <TouchableOpacity style={styles.submitButton}>
+                    <TouchableOpacity style={styles.submitButton} onPress={handleFeedbackSubmit}>
                         <Text style={styles.submitButtonText}>Submit Feedback</Text>
                     </TouchableOpacity>
                 </View>

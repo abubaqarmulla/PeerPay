@@ -7,14 +7,18 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
+  ScrollView,Image
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from "../../urlconfig";
 import { useAppContext } from '../../context';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 
 const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove, onReject }) => {
   return (
+    
     <TouchableOpacity
       style={[
         styles.transactionCard,
@@ -43,7 +47,8 @@ const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove,
           </TouchableOpacity>
         </View>
       )}
-    </TouchableOpacity>
+        </TouchableOpacity>
+       
   );
 };
 
@@ -52,6 +57,7 @@ const Send = () => {
   const [filter, setFilter] = useState('ALL'); // Default filter
   const [loading, setLoading] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const navigation = useNavigation();
 
   const { changeT, updatechangeT } = useAppContext();
 
@@ -200,8 +206,18 @@ const Send = () => {
 
   
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Transaction List as Loan Provider</Text>
+
+      <SafeAreaView style={styles.container}>
+            
+                {/* Header */}
+                <View style={styles.header}>
+                    <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
+                        <Image source={require('../assets/Back.png')} style={styles.backImage} />
+                    </TouchableOpacity>
+                </View>
+
+    
+      <Text style={styles.header2}>Transaction List as Loan Provider</Text>
       <Picker
         selectedValue={filter}
         onValueChange={(value) => setFilter(value)}
@@ -243,42 +259,42 @@ const Send = () => {
           contentContainerStyle={styles.transactionList}
         />
       )}
-    </View>
+        
+        
+                </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f9f9f9',
-  },
-  header: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    marginTop: 16,
-    color: '#333',
-    textAlign: 'center',
-  },
+        flex: 1,
+        backgroundColor: '#eafbfa',
+    },
+ 
+ 
   picker: {
-    marginBottom: 16,
+   marginBottom: 16,
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  transactionCard: {
-    padding: 12,
-    backgroundColor: '#fff',
-    marginBottom: 12,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: '#ddd',
+    borderColor: '#ccd1d9',
+    elevation: 2,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowRadius: 3,
+  },
+  transactionCard: {
+   padding: 16,
+    backgroundColor: '#ffffff',
+    marginBottom: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#e1e8ed',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    padding: 16,
   },
   selectedCard: {
     borderColor: '#4CAF50',
@@ -313,6 +329,7 @@ const styles = StyleSheet.create({
   },
   transactionList: {
     paddingBottom: 20,
+    padding:10
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -350,6 +367,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+   header: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        padding: 10,
+     alignItems: 'center',
+        backgroundColor:'white',
+       
+  },
+   header2: {
+        flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+     marginBottom: 12,
+     backgroundColor:"white",
+       
+    },
+  backImage: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
+    marginRight: 10,
+  }
   
 });
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from "../../urlconfig";
 
 function HomeScreen({ navigation }) {
     const images = [
@@ -11,16 +13,46 @@ function HomeScreen({ navigation }) {
     ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [user, setUser] = useState("");
+    const amount = user?.Amount?.$numberDecimal?.toString() || "0";
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
         }, 3000);
+
+
+        const getUserDetails = async () => {
+            try {
+                const userId = await AsyncStorage.getItem('userId');
+                if (userId) {
+                    const response = await fetch(`http://${BASE_URL}/user/${userId}`);
+                    const data = await response.json();
+                    if (response.ok) {
+                        setUser(data);
+                    } else {
+                        console.error('Failed to fetch user data');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user details:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getUserDetails();
+
+        
         return () => clearInterval(interval);
+         
+        
+       
     }, []);
 
     return (
         <SafeAreaView style={styles.container}>
+            
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
@@ -52,7 +84,7 @@ function HomeScreen({ navigation }) {
                     <Icon name="money" size={30} color="#288885" />
         <Text style={styles.gridText}>
             Account Balance:{"\n"}
-            <Text style={styles.balanceText}>₹2,000</Text>
+            <Text style={styles.balanceText}>₹{amount} {/* Default to 0 if undefined */}</Text>
         </Text>
         <Text style={styles.gridDescription}>
             Check your current balance and track your transactions effortlessly.
@@ -88,13 +120,32 @@ function HomeScreen({ navigation }) {
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Notifications')}>
                     <Icon name="bell" size={23} color="#288885" />
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Collection')}>
+                    <Icon name="folder" size={23} color="#288885" />
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('PasswordCreate')}>
                     <Icon name="cog" size={23} color="#288885" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Support')}>
                     <Icon name="headphones" size={23} color="#288885" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Welcome')}>
+                <TouchableOpacity style={styles.navButton}
+                    onPress={async () => {
+                    try {
+            // Clear all AsyncStorage data
+                        await AsyncStorage.clear();
+
+            // Clear user details (if stored in state)
+                                setUser("");
+
+            // Navigate to Login screen
+                            navigation.navigate('Login');
+                        } catch (error) {
+                        console.error('Error during logout:', error);
+        }
+    }}
+                
+                >
                     <Icon name="sign-out" size={23} color="#288885" />
                 </TouchableOpacity>
             </View>
