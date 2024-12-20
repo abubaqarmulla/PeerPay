@@ -4,9 +4,10 @@
   "description": "backend for peer to peer to loan management",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
-  "author": "Brahmaraj",
+  "author": "Abubaqar",
   "license": "ISC",
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.24.0",
