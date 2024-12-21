@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,13 +14,12 @@ function HomeScreen({ navigation }) {
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [user, setUser] = useState("");
-    const amount = user?.Amount?.$numberDecimal?.toString() || "0";
+    const [amount, setAmount] = useState("0");
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
         }, 3000);
-
 
         const getUserDetails = async () => {
             try {
@@ -30,29 +29,42 @@ function HomeScreen({ navigation }) {
                     const data = await response.json();
                     if (response.ok) {
                         setUser(data);
+                        // Set the amount when the user data is fetched
+                        setAmount(data?.Amount?.$numberDecimal?.toString() || "0");
                     } else {
                         console.error('Failed to fetch user data');
                     }
                 }
             } catch (error) {
                 console.error('Error fetching user details:', error);
-            } finally {
-                setLoading(false);
             }
         };
 
         getUserDetails();
 
-        
         return () => clearInterval(interval);
-         
-        
-       
     }, []);
+
+    const fetchAmount = async () => {
+        try {
+            const userId = await AsyncStorage.getItem('userId');
+            if (userId) {
+                const response = await fetch(`https://${BASE_URL}/user/${userId}`);
+                const data = await response.json();
+                if (response.ok) {
+                    // Update the amount on press
+                    setAmount(data?.Amount?.$numberDecimal?.toString() || "0");
+                } else {
+                    Alert.alert('Error', 'Failed to fetch account balance.');
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching amount:', error);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
-            
             {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
@@ -69,47 +81,46 @@ function HomeScreen({ navigation }) {
             </View>
 
             {/* Grid Section */}
-           <View style={styles.gridContainer}>
-    {/* Peer List */}
-    <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('PeerList')}>
-        <Icon name="users" size={30} color="#288885" />
-        <Text style={styles.gridText}>Peer List</Text>
-        <Text style={styles.gridDescription}>
-            View all your trusted peers for lending and borrowing money securely.
-        </Text>
-    </TouchableOpacity>
+            <View style={styles.gridContainer}>
+                {/* Peer List */}
+                <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('PeerList')}>
+                    <Icon name="users" size={30} color="#288885" />
+                    <Text style={styles.gridText}>Peer List</Text>
+                    <Text style={styles.gridDescription}>
+                        View all your trusted peers for lending and borrowing money securely.
+                    </Text>
+                </TouchableOpacity>
 
-    {/* Account Balance */}
-                <View style={styles.gridItem}>
+                {/* Account Balance */}
+                <TouchableOpacity style={styles.gridItem} onPress={fetchAmount}>
                     <Icon name="money" size={30} color="#288885" />
-        <Text style={styles.gridText}>
-            Account Balance:{"\n"}
-            <Text style={styles.balanceText}>₹{amount} {/* Default to 0 if undefined */}</Text>
-        </Text>
-        <Text style={styles.gridDescription}>
-            Check your current balance and track your transactions effortlessly.
-        </Text>
-    </View>
+                    <Text style={styles.gridText}>
+                        Account Balance:{"\n"}
+                        <Text style={styles.balanceText}>₹{amount}</Text>
+                    </Text>
+                    <Text style={styles.gridDescription}>
+                        Check your current balance and track your transactions effortlessly.
+                    </Text>
+                </TouchableOpacity>
 
-    {/* Send Money */}
-    <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('Send')}>
-        <Icon name="send" size={30} color="#288885" />
-        <Text style={styles.gridText}>Send</Text>
-        <Text style={styles.gridDescription}>
-            Transfer money instantly to your peers with a single tap.
-        </Text>
-    </TouchableOpacity>
+                {/* Send Money */}
+                <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('Send')}>
+                    <Icon name="send" size={30} color="#288885" />
+                    <Text style={styles.gridText}>Send</Text>
+                    <Text style={styles.gridDescription}>
+                        Transfer money instantly to your peers with a single tap.
+                    </Text>
+                </TouchableOpacity>
 
-    {/* Request Money */}
-    <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('Receiver')}>
-        <Icon name="credit-card" size={30} color="#288885" />
-        <Text style={styles.gridText}>Request</Text>
-        <Text style={styles.gridDescription}>
-            Request funds easily from peers when you need financial support.
-        </Text>
-    </TouchableOpacity>
-</View>
-
+                {/* Request Money */}
+                <TouchableOpacity style={styles.gridItem} onPress={() => navigation.navigate('Receiver')}>
+                    <Icon name="credit-card" size={30} color="#288885" />
+                    <Text style={styles.gridText}>Request</Text>
+                    <Text style={styles.gridDescription}>
+                        Request funds easily from peers when you need financial support.
+                    </Text>
+                </TouchableOpacity>
+            </View>
 
             {/* Bottom Navigation */}
             <View style={styles.bottomNav}>
@@ -117,9 +128,7 @@ function HomeScreen({ navigation }) {
                     <Icon name="user" size={23} color="#288885" />
                 </TouchableOpacity>
                 
-                <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Notifications')}>
-                    <Icon name="bell" size={23} color="#288885" />
-                </TouchableOpacity>
+               
                 <TouchableOpacity style={styles.navButton} onPress={() => navigation.navigate('Collection')}>
                     <Icon name="folder" size={23} color="#288885" />
                 </TouchableOpacity>
@@ -131,20 +140,17 @@ function HomeScreen({ navigation }) {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.navButton}
                     onPress={async () => {
-                    try {
-            // Clear all AsyncStorage data
-                        await AsyncStorage.clear();
-
-            // Clear user details (if stored in state)
-                                setUser("");
-
-            // Navigate to Login screen
-                            navigation.navigate('Login');
+                        try {
+                            // Clear all AsyncStorage data
+                            await AsyncStorage.clear();
+                            // Clear user details (if stored in state)
+                            setUser("");
+                            // Navigate to Login screen
+                            navigation.navigate('Welcome');
                         } catch (error) {
-                        console.error('Error during logout:', error);
-        }
-    }}
-                
+                            console.error('Error during logout:', error);
+                        }
+                    }}
                 >
                     <Icon name="sign-out" size={23} color="#288885" />
                 </TouchableOpacity>
@@ -190,41 +196,39 @@ const styles = StyleSheet.create({
         resizeMode: 'cover',
     },
     gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-},
-gridItem: {
-    width: '45%',
-    height: 200,
-    backgroundColor: '#ffffff',
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    elevation: 5,
-    padding: 10, // Added padding for better content alignment
-    borderColor: '#e0e0e0', // Optional: add border color for better separation
-    borderWidth: 1, // Optional: add border width for better separation
-},
-gridText: {
-    fontSize: 16,
-    color: '#333333',
-    marginTop: 10,
-    fontWeight: '600',
-    textAlign: 'center', // Ensure the text is centered
-},
-gridDescription: {
-    fontSize: 12,
-    color: '#555555',
-    textAlign: 'center',
-    marginTop: 5,
-    lineHeight: 16, // Improved line spacing for better readability
-}
-,
-
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        marginBottom: 20,
+    },
+    gridItem: {
+        width: '45%',
+        height: 200,
+        backgroundColor: '#ffffff',
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        elevation: 5,
+        padding: 10, // Added padding for better content alignment
+        borderColor: '#e0e0e0', // Optional: add border color for better separation
+        borderWidth: 1, // Optional: add border width for better separation
+    },
+    gridText: {
+        fontSize: 16,
+        color: '#333333',
+        marginTop: 10,
+        fontWeight: '600',
+        textAlign: 'center', // Ensure the text is centered
+    },
+    gridDescription: {
+        fontSize: 12,
+        color: '#555555',
+        textAlign: 'center',
+        marginTop: 5,
+        lineHeight: 16, // Improved line spacing for better readability
+    },
     balanceText: {
         fontSize: 18,
         color: '#288885',

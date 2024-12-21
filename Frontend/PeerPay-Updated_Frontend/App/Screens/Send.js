@@ -128,25 +128,27 @@ const Send = () => {
   };
 
   const handleReject = async (transactionId) => {
-    try {
-      const response = await fetch(`https://${BASE_URL}/transaction/rejected-sender`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transaction_id: transactionId }),
-      });
+  try {
+    const response = await fetch(`https://${BASE_URL}/transaction/rejected-sender`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ transaction_id: transactionId }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (response.ok) {
-        Alert.alert('Success', data.message);
-        fetchTransactions();
-      } else {
-        Alert.alert('Error', data.error);
-      }
-    } catch (error) {
-      Alert.alert('Error', error.message);
+    if (response.ok) {
+      Alert.alert('Success', data.message || 'Transaction rejected successfully.');
+      fetchTransactions(); // Refresh the transaction list
+    } else {
+      console.error('Error response:', data); // Log the error for debugging
+      Alert.alert('Error', data.error || 'Failed to reject the transaction.');
     }
-  };
+  } catch (error) {
+    console.error('Error during rejection:', error); // Log any unexpected errors
+    Alert.alert('Error', error.message || 'An error occurred while processing the rejection.');
+  }
+};
 
   const processOverdueTransactions = async () => {
     const senderId = await AsyncStorage.getItem('userId');
@@ -194,7 +196,7 @@ const Send = () => {
         
       </View>
 
-      <Text style={styles.title}>Send Money</Text>
+      <Text style={styles.title}>User Transaction Sent</Text>
       <Picker
         selectedValue={filter}
         onValueChange={(value) => setFilter(value)}

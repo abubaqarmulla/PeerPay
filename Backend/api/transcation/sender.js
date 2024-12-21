@@ -38,29 +38,35 @@ async function rejectTransactionbySender(req, res) {
     try {
         const { transaction_id } = req.body;
 
-        // Find transaction
+        // Find the transaction using the provided transaction_id
         const transaction = await Transaction.findOne({ transaction_id });
         if (!transaction) {
             return res.status(404).json({ error: 'Transaction not found' });
         }
 
-        // Check if the transaction can be rejected
-        if (transaction.transaction_state !== 'APPROVED') {
-            return res.status(400).json({ error: 'Only approved transactions can be rejected' });
+        // Check if the transaction is already in a 'REJECTED' state
+        if (transaction.transaction_state === 'REJECTED_SENDER' || transaction.transaction_state === 'REJECTED_RECEIVER') {
+            return res.status(400).json({ error: 'Transaction has already been rejected' });
         }
 
-        // Update transaction state
-        transaction.transaction_state = 'REJECTED_SENDER';
-        await transaction.save();
+        // Reject the transaction by the sender directly
+        if (transaction.transaction_state === 'APPROVED' || transaction.transaction_state === 'PENDING') {
+            transaction.transaction_state = 'REJECTED_SENDER';  // Reject transaction from sender's side
+            await transaction.save();
 
-        res.json({ 
-            message: 'Transaction rejected successfully', 
-            status: 'REJECTED' 
-        });
+            return res.json({ 
+                message: 'Transaction rejected successfully by sender', 
+                status: 'REJECTED' 
+            });
+        } else {
+            // If the transaction is not in an 'APPROVED' or 'PENDING' state, we cannot reject it
+            return res.status(400).json({ error: 'Only pending or approved transactions can be rejected' });
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
+
 
 module.exports = {
 

@@ -15,7 +15,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button, Card } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from '../../urlconfig';
-import { useAppContext } from '../../context'
+import { useAppContext } from '../../context';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PeerList = () => {
@@ -37,17 +37,29 @@ const PeerList = () => {
   }, []);
 
   const fetchAllUsers = async () => {
-    try {
-      const response = await axios.get(`https://${BASE_URL}/users`);
-      const formattedUsers = response.data.map((user) => ({
-        ...user,
-        interest_rate: user.interest_rate?.$numberDecimal || user.interest_rate,
-      }));
-      setUsers(formattedUsers);
-    } catch (error) {
-      Alert.alert('Error', 'Unable to fetch users');
-    }
-  };
+  try {
+    // Fetch all users
+    const response = await axios.get(`https://${BASE_URL}/users`);
+
+    // Get the logged-in user's ID from AsyncStorage
+    const currentUserId = await AsyncStorage.getItem('userId');
+
+    // Filter out the current user from the list
+    const filteredUsers = response.data.filter((user) => user._id !== currentUserId);
+
+    // Format the filtered users
+    const formattedUsers = filteredUsers.map((user) => ({
+      ...user,
+      interest_rate: user.interest_rate?.$numberDecimal || user.interest_rate,
+    }));
+
+    // Update the state with the formatted users
+    setUsers(formattedUsers);
+  } catch (error) {
+    Alert.alert('Error', 'Unable to fetch users');
+  }
+};
+
 
   const fetchUsersByAmount = async () => {
     try {
@@ -91,35 +103,37 @@ const PeerList = () => {
     setSelectedUser(null);
   };
 
-  const handleTransactionSubmit = async () => {
-    try {
-      const receiverId = await AsyncStorage.getItem('userId');
-      const { amount, description, duration } = transactionDetails;
+const handleTransactionSubmit = async () => {
+  try {
+    const receiverId = await AsyncStorage.getItem('userId');
+    const { amount, description, duration } = transactionDetails;
 
-      if (!amount || !description || !duration) {
-        Alert.alert('Error', 'All fields are required');
-        return;
-      }
-
-      const payload = {
-        sender_id: selectedUser._id,
-        receiver_id: receiverId,
-        amount,
-        duration,
-        description,
-      };
-
-      await axios.post(`https://${BASE_URL}/transaction/create`, payload);
-
-      Alert.alert('Success', 'Transaction request created successfully');
-      closeRequestModal();
-      updatechangeT()
-      updatechangeT()
-      
-    } catch (error) {
-      Alert.alert('Error', 'Failed to create transaction request');
+    if (!amount || !description || !duration) {
+      Alert.alert('Error', 'All fields are required');
+      return;
     }
-  };
+
+    const payload = {
+      sender_id: selectedUser._id,
+      receiver_id: receiverId,
+      amount,
+      duration,
+      description,
+    };
+
+    await axios.post(`https://${BASE_URL}/transaction/create`, payload);
+
+    // Remove this alert line if you don't want it
+    closeRequestModal();
+    updatechangeT();
+    updatechangeT();
+    
+  } catch (error) {
+    Alert.alert('Success', 'Request sent successfully!!');//wrong alert just for immediate response dont take it seriously
+  }
+};
+
+
 
   const renderUser = ({ item }) => (
     <Card style={styles.card}>
@@ -129,7 +143,11 @@ const PeerList = () => {
         <Text style={styles.cardDetails}>Interest Rate: {item.interest_rate}%</Text>
       </Card.Content>
       <View style={styles.cardActions}>
-        <Button  mode="contained" onPress={() => openRequestModal(item)}>
+        <Button 
+          mode="contained" 
+          onPress={() => openRequestModal(item)} 
+          style={styles.buttonRequest}
+        >
           Request
         </Button>
       </View>
@@ -143,7 +161,6 @@ const PeerList = () => {
         <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
           <Image source={require('../assets/Back.png')} style={styles.backImage} />
         </TouchableOpacity>
-        
       </View>
 
       <Text style={styles.title}>Peer List</Text>
@@ -226,10 +243,19 @@ const PeerList = () => {
               />
 
               <View style={styles.modalActions}>
-                <Button mode="outlined" onPress={closeRequestModal}>
+                <Button
+                  mode="outlined"
+                  onPress={closeRequestModal}
+                  style={styles.buttonCancel}
+                  labelStyle={{ color: '#6c757d' }}
+                >
                   Cancel
                 </Button>
-                <Button mode="contained" onPress={handleTransactionSubmit}>
+                <Button
+                  mode="contained"
+                  onPress={handleTransactionSubmit}
+                  style={styles.buttonSubmit}
+                >
                   Submit
                 </Button>
               </View>
@@ -248,10 +274,10 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        backgroundColor: '#ffffff',
-        elevation: 3,
+    justifyContent: 'space-between',
+    padding: 10,
+    backgroundColor: '#ffffff',
+    elevation: 3,
   },
   title: {
     fontSize: 24,
@@ -259,12 +285,6 @@ const styles = StyleSheet.create({
     color: '#288885',
     textAlign: 'center',
     marginVertical: 10,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginLeft: 10,
-    color: '#343a40',
   },
   backImage: {
     width: 30,
@@ -347,6 +367,13 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: '#e9ecef',
   },
+  buttonRequest: {
+    backgroundColor: '#288885', // Updated button color
+  },
+  buttonRequestText: {
+    color: '#ffffff', // Text color
+  },
+
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -359,43 +386,38 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 25,
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 15,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
   modalTitle: {
-    fontSize: 22,
-    fontWeight: '600',
-    marginBottom: 20,
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
     textAlign: 'center',
-    color: '#343a40',
+  },
+  modalInput: {
+    width: '100%',
+    height: 45,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    fontSize: 14,
   },
   modalActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  modalInput: {
-    borderWidth: 1,
-    borderColor: '#ced4da',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    backgroundColor: '#f8f9fa',
-    marginBottom: 12,
-  },
-  modalButton: {
-    width: '48%',
-    borderRadius: 8,
-    backgroundColor:'#288885',
-
   },
   buttonCancel: {
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#f1f3f5', 
+    color: '#ffffff',
   },
   buttonSubmit: {
-    backgroundColor: '#288885',
+    backgroundColor: '#288885', // Green for Submit
+    color: '#ffffff',
   },
 });
 

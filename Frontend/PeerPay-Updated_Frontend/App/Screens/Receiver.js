@@ -35,14 +35,14 @@ const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove,
       <View style={styles.cardContent}>
         <Text style={styles.transactionText}>Sender: {transaction.senderName}</Text>
         <Text style={styles.transactionText}>Receiver: {transaction.receiverName}</Text>
-        <Text style={styles.transactionText}>Amount: {transaction.amount.$numberDecimal}</Text>
+        <Text style={styles.transactionText}>Amount: {parseFloat(transaction.amount.$numberDecimal).toFixed(2)}</Text>
         <Text style={styles.transactionText}>Due Date: {new Date(transaction.due_date).toLocaleDateString()}</Text>
         <Text style={styles.transactionText}>Description: {transaction.description}</Text>
       </View>
       {transaction.transaction_state === 'APPROVED' && (
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.approveButton} onPress={onApprove}>
-            <Text style={styles.buttonText}>Approve</Text>
+            <Text style={styles.buttonText}>Collect</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.rejectButton} onPress={onReject}>
             <Text style={styles.buttonText}>Reject</Text>
@@ -54,12 +54,15 @@ const TransactionCard = ({ transaction, selectedTransaction, onPress, onApprove,
 };
 
 const Receiver = () => {
-  const { changeT, updatechangeT } = useAppContext();
-  const navigation = useNavigation();
-  const [transactions, setTransactions] = useState([]);
-  const [filter, setFilter] = useState('ALL');
-  const [loading, setLoading] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
+const { changeT, updatechangeT } = useAppContext(); // From context
+const navigation = useNavigation();
+const [transactions, setTransactions] = useState([]); // Use state only here
+const [filter, setFilter] = useState('ALL');
+const [loading, setLoading] = useState(false);
+const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+
+
 
   useEffect(() => {
     fetchTransactions();
@@ -120,47 +123,70 @@ const Receiver = () => {
     }
   };
 
-  const handleApprove = async (transactionId) => {
-    try {
-      const response = await fetch(`https://${BASE_URL}/transaction/approve-receiver`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transaction_id: transactionId }),
-      });
-      const result = await response.json();
+ const handleApprove = async (transactionId) => {
+  try {
+    const response = await fetch(`https://${BASE_URL}/transaction/approve-receiver`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ transaction_id: transactionId }),
+    });
 
-      if (response.ok) {
-        Alert.alert('Success', result.message);
-        fetchTransactions();
-        updatechangeT();
-      } else {
-        Alert.alert('Error', result.error);
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to approve the transaction.');
+    const result = await response.json();
+
+    if (response.ok) {
+      // Update the transaction list in state
+      setTransactions((prevTransactions) =>
+        prevTransactions.map((transaction) =>
+          transaction._id === transactionId ? { ...transaction, transaction_state: 'COMPLETED' } : transaction
+        )
+      );
+      Alert.alert('Success', result.message || 'Transaction completed successfully.');
+      
+      // Trigger page refresh
+      fetchTransactions?.();
+    } else {
+      Alert.alert('Error', result.error || 'Failed to approve the transaction.');
     }
-  };
+  } catch (error) {
+    console.error('Error during transaction approval:', error);
+    Alert.alert('Error', 'An error occurred while processing the approval.');
+  }
+};
 
-  const handleReject = async (transactionId) => {
-    try {
-      const response = await fetch(`https://${BASE_URL}/transaction/rejected-receiver`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transaction_id: transactionId }),
-      });
-      const result = await response.json();
+const handleReject = async (transactionId) => {
+  try {
+    const response = await fetch(`https://${BASE_URL}/transaction/rejected-receiver`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ transaction_id: transactionId }),
+    });
 
-      if (response.ok) {
-        Alert.alert('Success', result.message);
-        fetchTransactions();
-        updatechangeT();
-      } else {
-        Alert.alert('Error', result.error);
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Failed to reject the transaction.');
+    const result = await response.json();
+
+    if (response.ok) {
+      // Update the state for the rejected transaction
+      setTransactions((prevTransactions) =>
+        prevTransactions.map((transaction) =>
+          transaction._id === transactionId
+            ? { ...transaction, transaction_state: 'REJECTED' }
+            : transaction
+        )
+      );
+      Alert.alert('Success', result.message || 'Transaction rejected successfully.');
+
+      // Trigger page refresh
+      fetchTransactions?.();
+    } else {
+      Alert.alert('Error', result.error || 'An error occurred. Please try again.');
     }
-  };
+  } catch (error) {
+    console.error('Error during transaction rejection:', error);
+    Alert.alert('Error', 'An error occurred while processing the rejection.');
+  }
+};
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -170,7 +196,7 @@ const Receiver = () => {
           <Image source={require('../assets/Back.png')} style={styles.backImage} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.title}>Request Users</Text>
+      <Text style={styles.title}>User Transaction Requests</Text>
       <Picker
         selectedValue={filter}
         onValueChange={(value) => setFilter(value)}
@@ -218,10 +244,10 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        backgroundColor: '#ffffff',
-        elevation: 3,
+    justifyContent: 'space-between',
+    padding: 10,
+    backgroundColor: '#ffffff',
+    elevation: 3,
   },
   title: {
     fontSize: 24,
@@ -293,31 +319,27 @@ const styles = StyleSheet.create({
   },
   approveButton: {
     backgroundColor: '#4CAF50',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    padding: 12,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#388e3c',
+    flex: 0.48,
+    alignItems: 'center'
   },
   rejectButton: {
-    backgroundColor: '#f44336',
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+     backgroundColor: '#f44336',
+    padding: 12,
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#d32f2f',
+    flex: 0.48,
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 14,
   },
   loader: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: 20,
   },
   transactionList: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
   },
 });
 

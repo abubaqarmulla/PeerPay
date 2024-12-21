@@ -8,7 +8,7 @@ import SignUp from './SignUp';
 import Menu from './Menu'; // Correcting to use Menu.js instead of Home
 import PeerList from './PeerList'; 
 import Send from './Send'; 
-import Notifications from './Notifications'; 
+
 import Support from './Support'; 
 import AboutUs from './AboutUs'; 
 import Collection from './Collection';
@@ -17,7 +17,7 @@ import PasswordCreate from './PasswordCreate';
 import Receiver from './Receiver'; // Path to your Receiver screen
 import Profile from './Profile'; // Path to your Profile screen
 import AadhaarVerify from './AadharVerify';
-import getContacts from './getcontacts';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -30,7 +30,7 @@ function AppNavigator() {
       <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
       <Stack.Screen name="Menu" component={Menu} options={{ headerShown: false }} /> 
       <Stack.Screen name="PeerList" component={PeerList} options={{ headerShown: false }} /> 
-      <Stack.Screen name="Notifications" component={Notifications} options={{ headerShown: false }} /> 
+      
       <Stack.Screen name="Send" component={Send} options={{ headerShown: false }} />
       <Stack.Screen name="Receiver" component={Receiver} options={{ headerShown: false }} />
       <Stack.Screen name="Support" component={Support} options={{ headerShown: false }} />
