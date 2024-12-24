@@ -7,4 +7,4 @@ const getLocalIp = async () => {
   return ipAddress;
 };
 
-export const BASE_URL = "personalwebsite-f53i.onrender.com";
+export const BASE_URL = "peerpay-i61z.onrender.com";
