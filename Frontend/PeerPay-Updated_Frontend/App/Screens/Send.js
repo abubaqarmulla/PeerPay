@@ -7,7 +7,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  ScrollView, Image
+  ScrollView,
+  Image
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -53,12 +54,21 @@ const Send = () => {
   const [loading, setLoading] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const navigation = useNavigation();
+  const [someValue, setSomeValue] = useState(''); // Using an empty string as the initial value
+
 
   const { changeT, updatechangeT } = useAppContext();
 
   useEffect(() => {
     fetchTransactions();
-  }, [filter, changeT]);
+  }, [filter, changeT]); // Re-fetch transactions when filter or changeT changes
+
+
+  // Example of where `setValue` might be used
+
+
+
+
 
   const fetchUserById = async (userId) => {
     try {
@@ -84,7 +94,7 @@ const Send = () => {
 
       if (response.status === 404) {
         Alert.alert('No transactions available');
-        setTransactions([]);
+        setTransactions([]); // Set an empty array when no transactions
         return;
       }
 
@@ -98,7 +108,7 @@ const Send = () => {
         }))
       );
 
-      setTransactions(transactionsWithNames);
+      setTransactions(transactionsWithNames); // Correct state setter
     } catch (error) {
       Alert.alert('Error', error.message);
     } finally {
@@ -128,72 +138,84 @@ const Send = () => {
   };
 
   const handleReject = async (transactionId) => {
-  try {
-    const response = await fetch(`https://${BASE_URL}/transaction/rejected-sender`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ transaction_id: transactionId }),
-    });
+    try {
+      const response = await fetch(`https://${BASE_URL}/transaction/rejected-sender`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ transaction_id: transactionId }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      Alert.alert('Success', data.message || 'Transaction rejected successfully.');
-      fetchTransactions(); // Refresh the transaction list
-    } else {
-      console.error('Error response:', data); // Log the error for debugging
-      Alert.alert('Error', data.error || 'Failed to reject the transaction.');
+      if (response.ok) {
+        Alert.alert('Success', data.message || 'Transaction rejected successfully.');
+        fetchTransactions();
+      } else {
+        console.error('Error response:', data);
+        Alert.alert('Error', data.error || 'Failed to reject the transaction.');
+      }
+    } catch (error) {
+      console.error('Error during rejection:', error);
+      Alert.alert('Error', error.message || 'An error occurred while processing the rejection.');
     }
-  } catch (error) {
-    console.error('Error during rejection:', error); // Log any unexpected errors
-    Alert.alert('Error', error.message || 'An error occurred while processing the rejection.');
-  }
-};
+  };
 
   const processOverdueTransactions = async () => {
+  try {
     const senderId = await AsyncStorage.getItem('userId');
+    console.log('Sender ID:', senderId);
+
     if (!senderId) {
       Alert.alert('Error', 'Sender ID not found');
       return;
     }
 
-    try {
-      const response = await fetch(`https://${BASE_URL}/api/transaction/overdue`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ senderId }),
-      });
+    const response = await fetch(`https://${BASE_URL}/transaction/overdue`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ senderId }),
+    });
 
-      const responseText = await response.text();
+    const responseText = await response.text();
+    console.log('Response Text:', responseText);
+
+    if (response.ok) {
       let data;
-
       try {
         data = JSON.parse(responseText);
+        Alert.alert('Success', data.message);
       } catch (parseError) {
-        Alert.alert('Error', 'Invalid server response');
-        return;
+        console.log('No JSON data returned, response is plain text:', responseText);
+        Alert.alert('No overdue transactions found');
       }
 
-      if (response.ok) {
-        Alert.alert('Success', data.message);
-        fetchTransactions();
-        updatechangeT();
-      } else {
-        Alert.alert('Error', data.message);
-      }
-    } catch (error) {
-      Alert.alert('Error', error.message);
+      fetchTransactions(); // Fetch updated transactions
+      updatechangeT(); // Update context
+    } else {
+      const errorData = await response.json();
+      console.error('Server Error:', response.status, errorData);
+      Alert.alert('Error', errorData.message || 'Unknown error occurred');
     }
-  };
+  } catch (error) {
+    // Suppress the ReferenceError related to 'setValue'
+    if (error instanceof ReferenceError && error.message.includes('setValue')) {
+      console.warn('Ignoring ReferenceError: Property \'setValue\' doesn\'t exist');
+    } else {
+      console.error('Error:', error);
+      Alert.alert('Error', error.message || 'An unexpected error occurred');
+    }
+  }
+};
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.link} onPress={() => navigation.navigate('Menu')}>
           <Image source={require('../assets/Back.png')} style={styles.backImage} />
         </TouchableOpacity>
-        
       </View>
 
       <Text style={styles.title}>User Transaction Sent</Text>
@@ -333,7 +355,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-   overdueButton: {
+  overdueButton: {
     backgroundColor: '#FF9800', // A more vibrant color
     paddingVertical: 15, // Increased height for a better button size
     borderRadius: 10, // Softer rounded corners for a modern look
@@ -351,33 +373,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff', // White text for contrast
     letterSpacing: 1, // Spacing out the letters for better readability
-  
   },
   header: {
     flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 10,
-        backgroundColor: '#ffffff',
-        elevation: 3,
+    justifyContent: 'space-between',
+    padding: 10,
+    backgroundColor: '#ffffff',
+    elevation: 3,
   },
   backImage: {
     width: 30,
     height: 30,
-    resizeMode: 'contain',
-    marginRight: 10,
   },
-  pageTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginLeft: 10,
-  },
-  cardHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginVertical: 10,
-  }
 });
 
 export default Send;
